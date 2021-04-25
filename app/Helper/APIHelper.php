@@ -11,7 +11,7 @@ class APIHelper
         $client = new Client();
         $request = $client->get($url);
         $response = $request->getBody();
-        return $response;
+        return json_decode($response, true);
     }
 
 
@@ -19,6 +19,6 @@ class APIHelper
         $client = new Client();
         $response = $client->request("POST", $url, ['form_params'=>$body]);
         $response = $client->send($response);
-        return $response;
+        return json_decode($response, true);
     }
 }

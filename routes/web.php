@@ -2,7 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WeatherController;
+use App\Http\Controllers\IndexController;
 
+
+use App\Helper\APIHelper;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,10 +18,6 @@ use App\Http\Controllers\WeatherController;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
-
 // Controllers
+Route::get('/', [IndexController::class, 'index']);
 Route::post('/weather/check', [WeatherController::class, 'check']);
-

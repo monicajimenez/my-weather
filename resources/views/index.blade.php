@@ -25,10 +25,16 @@
                                     <form action="weather/check" method="POST">
                                         @csrf
                                         @method('POST')
-                                        <label for="country">Country</label>
-                                        <input id="country" type="text" class="@error('country') is-invalid @enderror">
-                                        <label for="city">City</label>
-                                        <input id="city" type="text" class="@error('city') is-invalid @enderror">
+                                        
+                                        <select class="form-control" name="country">
+                                            <option>Select Country</option>
+                                            @foreach ($countries as $country)
+                                                <option value="{{ $country['name'] }}"> 
+                                                    {{ $country['name'] }} 
+                                                </option>
+                                            @endforeach 
+                                        </select>
+                                        
                                         <button>Check Weather</button>
                                     </form>
                                 </div>
