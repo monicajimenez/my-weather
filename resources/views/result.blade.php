@@ -16,42 +16,19 @@
                     </div>
                 <!-- End: Icon -->
 
-                <!-- Start: Forms -->
+                <!-- Start: Result -->
                     <div class="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
                         <div class="grid grid-cols-1 md:grid-cols-1">
-                            <div class="p-9">
+                            <div class="p-12">
                                 <div class="ml-12">
-                                    <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm"> 
-                                        <!-- Start: Form -->
-                                            <form action="weather/check" method="POST">
-                                                @csrf
-                                                @method('POST')
-                                                
-                                                <select class="form-control" name="country">
-                                                    <option>Select Country</option>
-                                                    @foreach ($countries as $code => $value)
-                                                        <option value="{{ $code }}"> 
-                                                            {{ $value }} 
-                                                        </option>
-                                                    @endforeach 
-                                                </select>
-                                                <br/>
-                                                <br/>
-
-                                                <label for="city">City</label>
-                                                <input type="text" name="city" placeholder="Input City" required>
-                                                <br/>
-                                                <br/>
-
-                                                <button>Check Weather</button>
-                                            </form>
-                                        <!-- End: Form -->
+                                    <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
+                                        Temperature is {{ $temperature }}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                <!-- End: Forms -->
+                <!-- End: Result -->
             </div>
         </div>
     </body>

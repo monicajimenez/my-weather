@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+//Controllers
 use App\Http\Controllers\WeatherController;
 use App\Http\Controllers\IndexController;
 
