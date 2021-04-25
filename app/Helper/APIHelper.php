@@ -6,14 +6,25 @@ use GuzzleHttp\Client;
 class APIHelper
 {
 
-    public static function GetApi($url)
+    public static function GetApi($url, $headers = [])
     {
         $client = new Client();
-        $request = $client->get($url);
-        $response = $request->getBody();
-        return json_decode($response, true);
-    }
 
+        if($headers) {
+           $request = $client->get($url, [
+                'headers' => [
+                    'x-rapidapi-key'  => $headers['x-rapidapi-key'],
+                    'x-rapidapi-host' => $headers['x-rapidapi-host'],
+                    'useQueryString'  => $headers['useQueryString']
+                ]
+            ]);
+        }
+        else { 
+            $request = $client->get($url);
+        }
+        
+        return json_decode($request->getBody(), true);
+    }
 
     public static function PostApi($url,$body) {
         $client = new Client();

@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\View;
 use App\Helper\APIHelper;
 use Illuminate\Support\Arr;
 
+//config
+use Config;
+
 
 class IndexController extends Controller
 {
@@ -16,12 +19,15 @@ class IndexController extends Controller
 
 	public function __construct()
 	{
-        $this->countries = APIHelper::getAPI('https://restcountries.eu/rest/v2/all?fields=name');
+        $this->countries = APIHelper::getAPI(
+        	Config::get('myWeather.countryAPIURL'), 
+        	Config::get('myWeather.locationAPIHeaders')
+        );
     }
 
 	public function index(Request $request)
 	{
-		$countries = $this->countries;
+		$countries = $this->countries['countries'];
 
 	 	return View::make('index')->with(compact('countries'));
 	}

@@ -28,9 +28,9 @@
                                         
                                         <select class="form-control" name="country">
                                             <option>Select Country</option>
-                                            @foreach ($countries as $country)
-                                                <option value="{{ $country['name'] }}"> 
-                                                    {{ $country['name'] }} 
+                                            @foreach ($countries as $code => $value)
+                                                <option value="{{ $code }}"> 
+                                                    {{ $value }} 
                                                 </option>
                                             @endforeach 
                                         </select>
