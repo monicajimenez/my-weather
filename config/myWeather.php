@@ -2,8 +2,8 @@
 	
 	//Location APIs
 	
-	//Get Cities
-	$myWeather['cityAPIURL']         = 'https://countries-cities.p.rapidapi.com/location/country/US/city/list?per_page=400000';
+	//Get Cities in a Country
+	$myWeather['cityAPIURL']         = 'https://countriesnow.space/api/v0.1/countries/cities';
 	
 	// Get Countries
 	$myWeather['countryAPIURL']      = 'https://countries-cities.p.rapidapi.com/location/country/list';
@@ -12,7 +12,6 @@
 	    'x-rapidapi-host' => 'countries-cities.p.rapidapi.com',
 	    'useQueryString'  => true
 	];
-
 
 	//Get Lat Long by City
 	$myWeather['latLongByCityAPIURL'] = 'https://api.opencagedata.com/geocode/v1/json?'.

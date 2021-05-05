@@ -22,15 +22,19 @@
                             <div class="p-9">
                                 <div class="ml-12">
                                     <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm"> 
+                                        @isset($error)
+                                            <h3>{{ $error }}</h3>
+                                        @endisset
+
                                         <!-- Start: Form -->
-                                            <form action="weather/check" method="POST">
+                                            <form action="weather/getFahrenheit" method="POST">
                                                 @csrf
                                                 @method('POST')
                                                 
-                                                <select class="form-control" name="countryCode">
+                                                <select class="form-control" name="codeAndCountry">
                                                     <option>Select Country</option>
                                                     @foreach ($countries as $code => $value)
-                                                        <option value="{{ $code }}"> 
+                                                        <option value="{{ $code.'.'.$value }}"> 
                                                             {{ $value }} 
                                                         </option>
                                                     @endforeach 

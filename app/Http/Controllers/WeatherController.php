@@ -10,30 +10,64 @@ use Illuminate\Support\Facades\View;
 use App\Helper\APIHelper;
 use App\Helper\WeatherResultCacheHelper;
 
+//Traits
+use App\Traits\GetCountriesTrait;
+
 //Config
 use Config;
 
 class WeatherController extends Controller
 {
-    public function check(Request $request) {
-        $queryString = $request->all();
-        $city        = $queryString['city'];
-        $countryCode = $queryString['countryCode'];       	
+    use GetCountriesTrait;
 
-        //Get Fahrenheit
-        $Fahrenheit = $this->getFahrenheitThroughCache($countryCode, $city);
+    public function getFahrenheit(Request $request) {
+        $queryString      = $request->all();
+        $city             = $queryString['city'];
+        $codeAndCountry[] = explode('.', $queryString['codeAndCountry']);
+        $countryCode      = $codeAndCountry[0][0];
+        $country          = $codeAndCountry[0][1];
+
+        //Check if Valid City
+        if (!$this->CheckIfValidCity($countryCode, $city)) {
+            return View::make('index', 
+                    [
+                        'error' => 'Invalid City. Please try again.',
+                        'countries' => $this->getCountries()
+                    ]
+                );
+        }
+        
+        //Get fahrenheit
+        $fahrenheit = $this->getFahrenheitThroughCache($countryCode, $city);
     	
-        if ($Fahrenheit) {
-            return View::make('result', compact('Fahrenheit'));
+        if ($fahrenheit) {
+            return View::make('result', compact('fahrenheit'));
         }
 
-        $Fahrenheit = $this->getFahrenheitThroughAPI($city);
+        $fahrenheit = $this->getFahrenheitThroughAPI($city);
 
-        //Save Fahrenheit to Cache
-        $this->saveFahrenheitInCache($countryCode, $city, $Fahrenheit);
+        //Save fahrenheit to Cache
+        $this->saveFahrenheitInCache($countryCode, $city, $fahrenheit);
 
         //Return
-    	return View::make('result', compact('Fahrenheit'));
+    	return View::make('result', compact('fahrenheit'));
+    }
+
+    private function CheckIfValidCity($countryCode, $city) {
+        $ValidCities = APIHelper::PostApi(
+                Config::get('myWeather.cityAPIURL'),
+                ['country' => 'Philippines']
+            );
+
+        if (!$ValidCities) {
+            return false;
+        }
+
+        if (!in_array($city, $ValidCities->data)) {
+            return false;
+        }
+
+        return true;
     }
 
     private function getFahrenheitThroughCache($countryCode, $city) {
@@ -41,11 +75,11 @@ class WeatherController extends Controller
             return null;
         }
 
-        return WeatherResultCacheHelper::GetFahrenheit($countryCode, $city);
+        return WeatherResultCacheHelper::Getfahrenheit($countryCode, $city);
     }
 
-    private function saveFahrenheitInCache($countryCode, $city, $Fahrenheit) {
-        return WeatherResultCacheHelper::Save($countryCode, $city, $Fahrenheit);
+    private function saveFahrenheitInCache($countryCode, $city, $fahrenheit) {
+        return WeatherResultCacheHelper::Save($countryCode, $city, $fahrenheit);
     }
 
     private function getFahrenheitThroughAPI($city) {

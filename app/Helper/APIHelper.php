@@ -2,6 +2,7 @@
 namespace App\Helper;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Http;
 
 class APIHelper
 {
@@ -26,10 +27,7 @@ class APIHelper
         return json_decode($request->getBody(), true);
     }
 
-    public static function PostApi($url,$body) {
-        $client = new Client();
-        $response = $client->request("POST", $url, ['form_params'=>$body]);
-        $response = $client->send($response);
-        return json_decode($response, true);
+    public static function PostApi($url,$body = []) {
+        return json_decode(Http::post($url, $body));
     }
 }

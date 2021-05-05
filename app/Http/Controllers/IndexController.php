@@ -9,26 +9,23 @@ use Illuminate\Support\Facades\View;
 use App\Helper\APIHelper;
 use Illuminate\Support\Arr;
 
-//config
-use Config;
+//Traits
+use App\Traits\GetCountriesTrait;
 
 
 class IndexController extends Controller
 {
+	use GetCountriesTrait;
+
 	private $countries;
 
 	public function __construct()
 	{
-        $this->countries = APIHelper::getAPI(
-        	Config::get('myWeather.countryAPIURL'), 
-        	Config::get('myWeather.locationAPIHeaders')
-        );
+        $this->countries = $this->getCountries();
     }
 
 	public function index(Request $request)
 	{
-		$countries = $this->countries['countries'];
-
-	 	return View::make('index')->with(compact('countries'));
+	 	return View::make('index')->with(['countries' => $this->countries]);
 	}
 }
