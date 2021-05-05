@@ -27,7 +27,7 @@
                                                 @csrf
                                                 @method('POST')
                                                 
-                                                <select class="form-control" name="country">
+                                                <select class="form-control" name="countryCode">
                                                     <option>Select Country</option>
                                                     @foreach ($countries as $code => $value)
                                                         <option value="{{ $code }}"> 

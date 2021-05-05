@@ -7,26 +7,25 @@ use Illuminate\Support\Facades\Redis;
 
 class WeatherResultCacheHelper
 {
-    public static function Save($country, $city, $fahrenheight)
-    {
-        if(self::EXISTS($country, $city)) {
+    public static function Save($countryCode, $city, $Fahrenheit) {
+        if(self::EXISTS($countryCode, $city)) {
             return null;
         }
 
-        Redis::HMSET('temperature:'.$country.':'.$city,
-            'country', $country, 
+        Redis::HMSET('temperature:'.$countryCode.':'.$city,
+            'countryCode', $countryCode, 
             'city', $city,
-            'fahrenheight', $fahrenheight
+            'Fahrenheit', $Fahrenheit
         );
         
-        return json_decode($request->getBody(), true);
+        return true;
     }
 
-    public static function GetFahrenheight($country, $city) {
-        return Redis::HGET('temperature:'.$country.':'.$city, 'fahrenheight');
+    public static function GetFahrenheit($countryCode, $city) {
+        return Redis::HGET('temperature:'.$countryCode.':'.$city, 'Fahrenheit');
     }
 
-    public static function Exists($country, $city) {
-        return REDIS::EXISTS('temperature:'.$country.':'.$city);
+    public static function Exists($countryCode, $city) {
+        return REDIS::EXISTS('temperature:'.$countryCode.':'.$city);
     }
 }

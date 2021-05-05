@@ -8,30 +8,54 @@ use Illuminate\Support\Facades\View;
 
 //Helpers
 use App\Helper\APIHelper;
+use App\Helper\WeatherResultCacheHelper;
 
 //Config
 use Config;
 
 class WeatherController extends Controller
 {
-    public function check(Request $request)
-    {
+    public function check(Request $request) {
         $queryString = $request->all();
-       	$temperature = $this->getTemperature($queryString['city']);
+        $city        = $queryString['city'];
+        $countryCode = $queryString['countryCode'];       	
+
+        //Get Fahrenheit
+        $Fahrenheit = $this->getFahrenheitThroughCache($countryCode, $city);
     	
-    	return View::make('result', compact('temperature'));
+        if ($Fahrenheit) {
+            return View::make('result', compact('Fahrenheit'));
+        }
+
+        $Fahrenheit = $this->getFahrenheitThroughAPI($city);
+
+        //Save Fahrenheit to Cache
+        $this->saveFahrenheitInCache($countryCode, $city, $Fahrenheit);
+
+        //Return
+    	return View::make('result', compact('Fahrenheit'));
     }
 
-    private function getTemperature($city)
-    {
-    	$temperatureOne = $this->getTemperatureThroughOpenWeatherMap($city);
-    	$temperatureTwo = $this->getTemperatureThroughRapidAPI($city);
+    private function getFahrenheitThroughCache($countryCode, $city) {
+        if (!WeatherResultCacheHelper::Exists($countryCode, $city)) {
+            return null;
+        }
 
-    	return ($temperatureOne+$temperatureTwo)/2;
+        return WeatherResultCacheHelper::GetFahrenheit($countryCode, $city);
     }
 
-    private function getTemperatureThroughRapidAPI($city)
-    {
+    private function saveFahrenheitInCache($countryCode, $city, $Fahrenheit) {
+        return WeatherResultCacheHelper::Save($countryCode, $city, $Fahrenheit);
+    }
+
+    private function getFahrenheitThroughAPI($city) {
+    	$temperatureOne = $this->getFahrenheitThroughOpenWeatherMap($city);
+    	$temperatureTwo = $this->getFahrenheitThroughRapidAPI($city);
+
+        return ($temperatureOne+$temperatureTwo)/2;
+    }
+
+    private function getFahrenheitThroughRapidAPI($city) {
     	$latitudeLongitude = $this->getLatitudeLongitudeByCity($city);
     	$longitude 	       = $latitudeLongitude['lng'];
     	$latitude 		   = $latitudeLongitude['lat'];
@@ -42,15 +66,13 @@ class WeatherController extends Controller
     		)['data'][0]['temp'];
     }
 
-    private function getTemperatureThroughOpenWeatherMap($city)
-    {
+    private function getFahrenheitThroughOpenWeatherMap($city) {
     	return APIHelper::getAPI(
 	    		Config::get('myWeather.openWeatherMap').$city
 	    	)['main']['temp'];
     }
 
-    private function getLatitudeLongitudeByCity($city)
-    {
+    private function getLatitudeLongitudeByCity($city) {
     	return APIHelper::getAPI(
     			Config::get('myWeather.latLongByCityAPIURL').$city
     		)['results'][0]['geometry'];

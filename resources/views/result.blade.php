@@ -22,7 +22,7 @@
                             <div class="p-12">
                                 <div class="ml-12">
                                     <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                        Temperature is {{ $temperature }}
+                                        Temperature (Fahrenheit) is {{ $Fahrenheit }}
                                     </div>
                                 </div>
                             </div>
