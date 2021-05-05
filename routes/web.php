@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WeatherController;
 use App\Http\Controllers\IndexController;
 
+//Test
+use Illuminate\Support\Facades\Redis;
+use App\Helper\WeatherResultCacheHelper;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,4 +23,4 @@ use App\Http\Controllers\IndexController;
 
 // Controllers
 Route::get('/', [IndexController::class, 'index']);
-Route::post('/weather/check', [WeatherController::class, 'check']);
+Route::post('getFahrenheit', [WeatherController::class, 'getFahrenheit']);

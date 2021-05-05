@@ -19,13 +19,11 @@ class IndexController extends Controller
 
 	private $countries;
 
-	public function __construct()
-	{
+	public function __construct() {
         $this->countries = $this->getCountries();
     }
 
-	public function index(Request $request)
-	{
+	public function index(Request $request) {
 	 	return View::make('index')->with(['countries' => $this->countries]);
 	}
 }

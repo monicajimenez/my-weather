@@ -27,7 +27,7 @@
                                         @endisset
 
                                         <!-- Start: Form -->
-                                            <form action="weather/getFahrenheit" method="POST">
+                                            <form action="getFahrenheit" method="POST">
                                                 @csrf
                                                 @method('POST')
                                                 
